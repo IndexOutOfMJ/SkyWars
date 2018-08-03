@@ -22,6 +22,8 @@ public class SkyWars extends JavaPlugin {
     private FileUtil fileUtil;
     private GameState gameState;
     private LocationsUtil locationsUtil;
+    private SchedulerSaver schedulerSaver;
+    private StartScheduler startScheduler;
 
     public void onEnable() {
 
@@ -31,6 +33,7 @@ public class SkyWars extends JavaPlugin {
 
     public void onDisable() {
         gameState.setGameState(GameEnum.RESTART);
+        schedulerSaver.cancelScheduler();
     }
 
     public void init() {
@@ -44,6 +47,8 @@ public class SkyWars extends JavaPlugin {
         fileUtil = new FileUtil(this);
         gameState = new GameState();
         locationsUtil = new LocationsUtil(this);
+        schedulerSaver = new SchedulerSaver();
+        startScheduler = new StartScheduler(this);
     }
 
     public void setListener(Listener listener) {
@@ -74,4 +79,15 @@ public class SkyWars extends JavaPlugin {
         return fileUtil;
     }
 
+    public LocationsUtil getLocationsUtil() {
+        return locationsUtil;
+    }
+
+    public SchedulerSaver getSchedulerSaver() {
+        return schedulerSaver;
+    }
+
+    public StartScheduler getStartScheduler() {
+        return startScheduler;
+    }
 }

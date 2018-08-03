@@ -5,6 +5,7 @@ import de.mj.skywars.utils.GameEnum;
 import de.mj.skywars.utils.GameState;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
@@ -27,8 +28,16 @@ public class DamageListener implements Listener {
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent damageByEntityEvent) {
         GameState gameState = skyWars.getGameState();
-        if (gameState.getGameState().equals(GameEnum.LOBBY) || gameState.getGameState().equals(GameEnum.END))
+        if (gameState.getGameState().equals(GameEnum.LOBBY) || gameState.getGameState().equals(GameEnum.END)
+                || gameState.getGameState().equals(GameEnum.EQUIP))
             damageByEntityEvent.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockDamager(EntityDamageByBlockEvent damageByBlockEvent) {
+        GameState gameState = skyWars.getGameState();
+        if (gameState.getGameState().equals(GameEnum.LOBBY) || gameState.getGameState().equals(GameEnum.END))
+            damageByBlockEvent.setCancelled(true);
     }
 
 }
