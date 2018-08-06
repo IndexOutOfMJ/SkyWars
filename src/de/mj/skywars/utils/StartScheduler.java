@@ -19,14 +19,19 @@ public class StartScheduler {
             int startcounter = 60;
             public void run() {
                 if (startcounter == 0) {
-                    skyWars.getGameState().setGameState(GameEnum.INGAME);
+                    skyWars.getGameState().setGameState(GameEnum.EQUIP);
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         Integer islands = skyWars.getLocationsUtil().getIsland().size();
-                        all.teleport(skyWars.getLocationsUtil().getIsland().get(islands));
+                        if (skyWars.getLocationsUtil().getIsland().get(islands) !=null)
+                            all.teleport(skyWars.getLocationsUtil().getIsland().get(islands));
+                        skyWars.getChestDetectionAndFill().DetectChets(all.getWorld().getName());
                         islands--;
                     }
                     EquipTimer();
                     cancel();
+                }
+                for (Player all : Bukkit.getOnlinePlayers()) {
+                    all.setLevel(startcounter);
                 }
                 startcounter--;
             }
@@ -40,6 +45,9 @@ public class StartScheduler {
                 if (timer == 0) {
                     skyWars.getGameState().setGameState(GameEnum.INGAME);
                     cancel();
+                }
+                for (Player all : Bukkit.getOnlinePlayers()) {
+                    all.setLevel(timer);
                 }
                 timer--;
             }

@@ -3,8 +3,6 @@ package de.mj.skywars.utils;
 import de.mj.skywars.SkyWars;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
@@ -18,29 +16,31 @@ public class LocationsUtil {
         this.skyWars = skyWars;
     }
 
-    public void setLocation (Location location, String locationname) {
+    public boolean setLocation (Location location, String locationname) {
         if (locationname.equalsIgnoreCase("lobby")) {
-            YamlConfiguration spawncfg = skyWars.getFileUtil().getLocationsConfig();
-            spawncfg.set(locationname.toLowerCase() + ".world", location.getWorld().getName());
-            spawncfg.set(locationname.toLowerCase() + ".x", location.getX());
-            spawncfg.set(locationname.toLowerCase() + ".y", location.getY());
-            spawncfg.set(locationname.toLowerCase() + ".z", location.getZ());
-            spawncfg.set(locationname.toLowerCase() + ".yaw", location.getY());
-            spawncfg.set(locationname.toLowerCase() + ".pitch", location.getPitch());
+            skyWars.getConfigUtil().getLocationsConfig().set(locationname.toLowerCase() + ".world", location.getWorld().getName());
+            skyWars.getConfigUtil().getLocationsConfig().set(locationname.toLowerCase() + ".x", location.getX());
+            skyWars.getConfigUtil().getLocationsConfig().set(locationname.toLowerCase() + ".y", location.getY());
+            skyWars.getConfigUtil().getLocationsConfig().set(locationname.toLowerCase() + ".z", location.getZ());
+            skyWars.getConfigUtil().getLocationsConfig().set(locationname.toLowerCase() + ".yaw", location.getY());
+            skyWars.getConfigUtil().getLocationsConfig().set(locationname.toLowerCase() + ".pitch", location.getPitch());
             try {
-                spawncfg.save(skyWars.getFileUtil().getLocationsFile());
+                skyWars.getConfigUtil().getLocationsConfig().save(skyWars.getConfigUtil().getLocationsFile());
+                loadLocation();
+                return true;
             } catch (Exception ex) {
                 ex.printStackTrace();
+                return false;
             }
         }
+        return false;
     }
 
     public void loadLocation() {
-        YamlConfiguration locationcfg = skyWars.getFileUtil().getLocationsConfig();
-        this.lobby = new Location(Bukkit.getWorld(locationcfg.getString("lobby.world")),
-                locationcfg.getDouble("lobby.x"), locationcfg.getDouble("lobby.y"),
-                locationcfg.getDouble("lobby.z"), locationcfg.getLong("lobby.yaw"),
-                locationcfg.getLong("lobby.pitch"));
+        this.lobby = new Location(Bukkit.getWorld(skyWars.getConfigUtil().getLocationsConfig().getString("lobby.world")),
+                skyWars.getConfigUtil().getLocationsConfig().getDouble("lobby.x"), skyWars.getConfigUtil().getLocationsConfig().getDouble("lobby.y"),
+                skyWars.getConfigUtil().getLocationsConfig().getDouble("lobby.z"), skyWars.getConfigUtil().getLocationsConfig().getLong("lobby.yaw"),
+                skyWars.getConfigUtil().getLocationsConfig().getLong("lobby.pitch"));
     }
 
     public Location getLobby() {

@@ -3,7 +3,6 @@ package de.mj.skywars.utils;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class SchedulerSaver {
 

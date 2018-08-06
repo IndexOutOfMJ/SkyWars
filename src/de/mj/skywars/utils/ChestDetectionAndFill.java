@@ -35,8 +35,8 @@ public class ChestDetectionAndFill {
         int chestslot = 26;
         while (chestslot >= 0) {
             Random random = new Random();
-            int itemtype = random.nextInt(skyWars.getFileUtil().getChestConfig().size()) + 1;
-            chest.getBlockInventory().addItem(new ItemStack(Material.getMaterial(skyWars.getFileUtil().getChestConfig().get(itemtype))));
+            int itemtype = random.nextInt(skyWars.getConfigUtil().getChestConfig().size()-1) + 1;
+            chest.getBlockInventory().addItem(new ItemStack(Material.getMaterial(skyWars.getConfigUtil().getChestConfig().get(itemtype))));
             chestslot--;
         }
     }

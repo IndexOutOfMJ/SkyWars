@@ -1,6 +1,9 @@
 package de.mj.skywars;
 
+import de.mj.skywars.commands.SetLocationCommand;
+import de.mj.skywars.listener.DamageListener;
 import de.mj.skywars.listener.JoinListener;
+import de.mj.skywars.listener.PlayerDeathListener;
 import de.mj.skywars.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -13,22 +16,29 @@ public class SkyWars extends JavaPlugin {
     private ConsoleCommandSender sender;
 
     //Commands
+    private SetLocationCommand setLocationCommand;
 
-    //LIstener
+    //Listener
+    private DamageListener damageListener;
     private JoinListener joinListener;
+    private PlayerDeathListener playerDeathListener;
 
     //Utils
     private ChestDetectionAndFill chestDetectionAndFill;
-    private FileUtil fileUtil;
+    private Data data;
+    private ConfigUtil configUtil;
     private GameState gameState;
     private LocationsUtil locationsUtil;
     private SchedulerSaver schedulerSaver;
     private StartScheduler startScheduler;
 
     public void onEnable() {
-
+        this.saveDefaultConfig();
         init();
+        configUtil.loadDefaultConfig();
+        configUtil.addDefaultChest();
         gameState.setGameState(GameEnum.LOBBY);
+        sender.sendMessage(data.getPrefix() + "§awas successfully enabled!");
     }
 
     public void onDisable() {
@@ -37,15 +47,21 @@ public class SkyWars extends JavaPlugin {
     }
 
     public void init() {
+        sender = Bukkit.getConsoleSender();
+
         //Commands
+        setLocationCommand = new SetLocationCommand(this);
 
         //Listener
+        damageListener = new DamageListener(this);
         joinListener = new JoinListener(this);
+        playerDeathListener = new PlayerDeathListener(this);
 
         //Utils
         chestDetectionAndFill = new ChestDetectionAndFill(this);
-        fileUtil = new FileUtil(this);
-        gameState = new GameState();
+        data = new Data();
+        configUtil = new ConfigUtil(this);
+        gameState = new GameState(this);
         locationsUtil = new LocationsUtil(this);
         schedulerSaver = new SchedulerSaver();
         startScheduler = new StartScheduler(this);
@@ -75,8 +91,8 @@ public class SkyWars extends JavaPlugin {
         return chestDetectionAndFill;
     }
 
-    public FileUtil getFileUtil() {
-        return fileUtil;
+    public ConfigUtil getConfigUtil() {
+        return configUtil;
     }
 
     public LocationsUtil getLocationsUtil() {
@@ -89,5 +105,21 @@ public class SkyWars extends JavaPlugin {
 
     public StartScheduler getStartScheduler() {
         return startScheduler;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public SetLocationCommand getSetLocationCommand() {
+        return setLocationCommand;
+    }
+
+    public DamageListener getDamageListener() {
+        return damageListener;
+    }
+
+    public PlayerDeathListener getPlayerDeathListener() {
+        return playerDeathListener;
     }
 }
