@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class DamageListener implements Listener {
@@ -17,14 +16,6 @@ public class DamageListener implements Listener {
     public DamageListener (@NotNull SkyWars skyWars) {
         this.skyWars = skyWars;
         skyWars.setListener(this);
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageEvent damageEvent) {
-        GameState gameState = skyWars.getGameState();
-        if (gameState.getGameState().equals(GameEnum.LOBBY) || gameState.getGameState().equals(GameEnum.END))
-            damageEvent.setCancelled(true);
-        else damageEvent.setCancelled(false);
     }
 
     @EventHandler

@@ -2,7 +2,6 @@ package de.mj.skywars.utils;
 
 import de.mj.skywars.SkyWars;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -14,11 +13,12 @@ public class StartScheduler {
         this.skyWars = skyWars;
     }
 
-    public void GameStartScheduler() {
+    private int lobbycounter = 60;
+
+    void GameStartScheduler() {
         skyWars.getSchedulerSaver().createScheduler(new BukkitRunnable() {
-            int startcounter = 60;
             public void run() {
-                if (startcounter == 0) {
+                if (lobbycounter == 0) {
                     skyWars.getGameState().setGameState(GameEnum.EQUIP);
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         Integer islands = skyWars.getLocationsUtil().getIsland().size();
@@ -31,14 +31,14 @@ public class StartScheduler {
                     cancel();
                 }
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    all.setLevel(startcounter);
+                    all.setLevel(lobbycounter);
                 }
-                startcounter--;
+                lobbycounter--;
             }
         }.runTaskTimer(skyWars, 0L, 20L));
     }
 
-    public void EquipTimer() {
+    private void EquipTimer() {
         skyWars.getSchedulerSaver().createScheduler(new BukkitRunnable() {
             int timer = 20;
             public void run() {
@@ -52,6 +52,14 @@ public class StartScheduler {
                 timer--;
             }
         }.runTaskTimer(skyWars, 0L, 20L));
+    }
+
+    public int getLobbycounter() {
+        return lobbycounter;
+    }
+
+    public void setLobbycounter(int lobbycounter) {
+        this.lobbycounter = lobbycounter;
     }
 }
 

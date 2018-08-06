@@ -1,6 +1,8 @@
 package de.mj.skywars;
 
 import de.mj.skywars.commands.SetLocationCommand;
+import de.mj.skywars.commands.SkyWarsMainCommand;
+import de.mj.skywars.commands.StartCommand;
 import de.mj.skywars.listener.DamageListener;
 import de.mj.skywars.listener.JoinListener;
 import de.mj.skywars.listener.PlayerDeathListener;
@@ -17,6 +19,8 @@ public class SkyWars extends JavaPlugin {
 
     //Commands
     private SetLocationCommand setLocationCommand;
+    private SkyWarsMainCommand skyWarsMainCommand;
+    private StartCommand startCommand;
 
     //Listener
     private DamageListener damageListener;
@@ -46,11 +50,13 @@ public class SkyWars extends JavaPlugin {
         schedulerSaver.cancelScheduler();
     }
 
-    public void init() {
+    private void init() {
         sender = Bukkit.getConsoleSender();
 
         //Commands
         setLocationCommand = new SetLocationCommand(this);
+        skyWarsMainCommand = new SkyWarsMainCommand(this);
+        startCommand = new StartCommand(this);
 
         //Listener
         damageListener = new DamageListener(this);
@@ -121,5 +127,13 @@ public class SkyWars extends JavaPlugin {
 
     public PlayerDeathListener getPlayerDeathListener() {
         return playerDeathListener;
+    }
+
+    public StartCommand getStartCommand() {
+        return startCommand;
+    }
+
+    public SkyWarsMainCommand getSkyWarsMainCommand() {
+        return skyWarsMainCommand;
     }
 }

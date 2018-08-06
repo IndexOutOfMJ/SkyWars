@@ -5,6 +5,7 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +34,29 @@ public class ConfigUtil {
         skyWars.getData().setPrefix(ColorFormatter(skyWars.getConfig().getString("Prefix")));
     }
 
+    public void reloadAllConfigs() {
+        //Main Config
+        skyWars.reloadConfig();
+
+        //Other Configs
+        reloadOtherConf("Chest.yml", chestConfig);
+        reloadOtherConf("Locations.yml", locationConfig);
+        reloadOtherConf("Language.yml", languageConfig);
+    }
+
+    private void reloadOtherConf(String confyml, YamlConfiguration yamlConfiguration) {
+        InputStream confStream = skyWars.getResource(confyml);
+        if (confStream != null) {
+            YamlConfiguration relConfig = YamlConfiguration.loadConfiguration(confStream);
+            yamlConfiguration.setDefaults(relConfig);
+        }
+    }
+
     public Configuration getDefaultConfig() {
         return skyWars.getConfig();
     }
 
-    public List<String> getChestConfig() {
+    List<String> getChestConfig() {
         def.add("WOOD");
         List<String> items = (List<String>) chestConfig.getList("chestFile.items", def);
         return items;
