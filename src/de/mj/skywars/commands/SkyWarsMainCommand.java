@@ -1,3 +1,9 @@
+/*
+ * @author MJ
+ * Created in 02.08.2018
+ * Copyright (c) 2018 by MJ. All rights reserved.
+ */
+
 package de.mj.skywars.commands;
 
 import de.mj.skywars.SkyWars;
@@ -23,6 +29,7 @@ public class SkyWarsMainCommand implements CommandExecutor {
         }
         if (args[0].equalsIgnoreCase("setlobby")) {
             skyWars.getGameState().setGameState(GameEnum.LOBBY);
+            skyWars.getStartScheduler().setLobbycounter(60);
             commandSender.sendMessage(skyWars.getData().getPrefix() + "§aGameState was set to lobby");
             return true;
         }

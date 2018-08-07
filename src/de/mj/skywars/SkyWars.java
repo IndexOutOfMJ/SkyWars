@@ -1,3 +1,9 @@
+/*
+ * @author MJ
+ * Created in 02.08.2018
+ * Copyright (c) 2018 by MJ. All rights reserved.
+ */
+
 package de.mj.skywars;
 
 import de.mj.skywars.commands.SetLocationCommand;
@@ -10,6 +16,7 @@ import de.mj.skywars.utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,6 +53,9 @@ public class SkyWars extends JavaPlugin {
     }
 
     public void onDisable() {
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            all.kickPlayer(" ");
+        }
         gameState.setGameState(GameEnum.RESTART);
         schedulerSaver.cancelScheduler();
     }

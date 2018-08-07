@@ -1,3 +1,9 @@
+/*
+ * @author MJ
+ * Created in 02.08.2018
+ * Copyright (c) 2018 by MJ. All rights reserved.
+ */
+
 package de.mj.skywars.utils;
 
 import de.mj.skywars.SkyWars;
@@ -41,6 +47,7 @@ public class StartScheduler {
     private void EquipTimer() {
         skyWars.getSchedulerSaver().createScheduler(new BukkitRunnable() {
             int timer = 20;
+
             public void run() {
                 if (timer == 0) {
                     skyWars.getGameState().setGameState(GameEnum.INGAME);

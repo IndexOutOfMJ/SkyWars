@@ -1,3 +1,9 @@
+/*
+ * @author MJ
+ * Created in 02.08.2018
+ * Copyright (c) 2018 by MJ. All rights reserved.
+ */
+
 package de.mj.skywars.utils;
 
 import de.mj.skywars.SkyWars;
@@ -12,7 +18,7 @@ public class GameState {
     }
 
     public void setGameState(GameEnum gameState) {
-        gameEnum = gameState.LOBBY;
+        gameEnum = GameEnum.LOBBY;
     }
 
     public GameEnum getGameState () {
@@ -20,8 +26,8 @@ public class GameState {
     }
 
     public void GameStart() {
-        if (getGameState().equals(gameEnum.LOBBY)) {
-            setGameState(gameEnum.START);
+        if (getGameState().equals(GameEnum.LOBBY)) {
+            setGameState(GameEnum.START);
             skyWars.getStartScheduler().GameStartScheduler();
         } else {
 
