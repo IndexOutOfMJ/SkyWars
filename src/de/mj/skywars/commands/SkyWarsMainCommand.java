@@ -28,9 +28,13 @@ public class SkyWarsMainCommand implements CommandExecutor {
             return true;
         }
         if (args[0].equalsIgnoreCase("setlobby")) {
-            skyWars.getGameState().setGameState(GameEnum.LOBBY);
-            skyWars.getStartScheduler().setLobbycounter(60);
+            skyWars.getGame().setGameState(GameEnum.LOBBY);
+            skyWars.getStartScheduler().setLobbyCounter(60);
             commandSender.sendMessage(skyWars.getData().getPrefix() + "§aGameState was set to lobby");
+            return true;
+        }
+        if (args[0].equalsIgnoreCase("getGame")) {
+            commandSender.sendMessage(skyWars.getData().getPrefix() + skyWars.getGame().getGameState());
             return true;
         }
         return false;

@@ -7,12 +7,16 @@
 package de.mj.skywars.listener;
 
 import de.mj.skywars.SkyWars;
+import de.mj.skywars.utils.Game;
 import de.mj.skywars.utils.GameEnum;
-import de.mj.skywars.utils.GameState;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.jetbrains.annotations.NotNull;
 
 public class DamageListener implements Listener {
@@ -24,19 +28,34 @@ public class DamageListener implements Listener {
         skyWars.setListener(this);
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onDamage(EntityDamageEvent damageEvent) {
+        if (!(damageEvent.getEntity() instanceof Player))
+            return;
+        Game game = skyWars.getGame();
+        if (game.getGameState().equals(GameEnum.LOBBY) || game.getGameState().equals(GameEnum.END) || game.getGameState().equals(GameEnum.START)) {
+            damageEvent.setCancelled(true);
+        } else if (game.getGameState().equals(GameEnum.EQUIP)) {
+            if (damageEvent.getCause().equals(DamageCause.ENTITY_ATTACK) || damageEvent.getCause().equals(DamageCause.CONTACT))
+                damageEvent.setCancelled(true);
+            else damageEvent.setCancelled(false);
+        } else
+            damageEvent.setCancelled(false);
+    }
+
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent damageByEntityEvent) {
-        GameState gameState = skyWars.getGameState();
-        if (gameState.getGameState().equals(GameEnum.LOBBY) || gameState.getGameState().equals(GameEnum.END)
-                || gameState.getGameState().equals(GameEnum.EQUIP))
+        Game game = skyWars.getGame();
+        if (game.getGameState().equals(GameEnum.LOBBY) || game.getGameState().equals(GameEnum.END)
+                || game.getGameState().equals(GameEnum.EQUIP))
             damageByEntityEvent.setCancelled(true);
         else damageByEntityEvent.setCancelled(false);
     }
 
     @EventHandler
     public void onBlockDamager(EntityDamageByBlockEvent damageByBlockEvent) {
-        GameState gameState = skyWars.getGameState();
-        if (gameState.getGameState().equals(GameEnum.LOBBY) || gameState.getGameState().equals(GameEnum.END))
+        Game game = skyWars.getGame();
+        if (game.getGameState().equals(GameEnum.LOBBY) || game.getGameState().equals(GameEnum.END))
             damageByBlockEvent.setCancelled(true);
         else damageByBlockEvent.setCancelled(false);
     }

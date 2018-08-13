@@ -1,10 +1,29 @@
 #-----------------------------------#
 #You can change this
-Prefix: '&8[&9SkyWars &8] '
+Prefix: '&8[&9SkyWars&8] '
+
+StartItemName: '&aStart the Game'
+StartItemType: 'EMERALD'
+StartItemLore:
+- '&7Click here'
+- '&7to &astart &7the game'
+
+KitItemName: '&eKits'
+KitItemType: 'CHEST'
+KitItemLore:
+- '&7Click here'
+- '&7to select your &eKit'
+
+ExitItemName: '&cExit'
+ExitItemType: 'SLIME_BALL'
+ExitItemLore:
+- '&7Click here'
+- '&7to &cexit &7the server'
 #-----------------------------------#
 
 #-----------------------------------#
 #Please do not change this!
 Setup: false
+MySQL: false
 PlayerCountToStart: 4
 #-----------------------------------#

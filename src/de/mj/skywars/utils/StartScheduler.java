@@ -8,65 +8,86 @@ package de.mj.skywars.utils;
 
 import de.mj.skywars.SkyWars;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class StartScheduler {
 
     private final SkyWars skyWars;
 
-    public StartScheduler (SkyWars skyWars) {
+    private int lobbyCounter = 60;
+    private int timer = 20;
+
+    public StartScheduler(SkyWars skyWars) {
         this.skyWars = skyWars;
     }
 
-    private int lobbycounter = 60;
+    private static <K, V> K getFirstKey(HashMap<K, V> map) {
+        Iterator<K> i = map.keySet().iterator();
+        return i.hasNext() ? i.next() : null;
+    }
 
-    void GameStartScheduler() {
+    void gameStartScheduler() {
         skyWars.getSchedulerSaver().createScheduler(new BukkitRunnable() {
             public void run() {
-                if (lobbycounter == 0) {
-                    skyWars.getGameState().setGameState(GameEnum.EQUIP);
+                if (lobbyCounter == 0) {
+                    skyWars.getGame().setGameState(GameEnum.EQUIP);
                     for (Player all : Bukkit.getOnlinePlayers()) {
                         Integer islands = skyWars.getLocationsUtil().getIsland().size();
-                        if (skyWars.getLocationsUtil().getIsland().get(islands) !=null)
+                        if (skyWars.getLocationsUtil().getIsland().get(islands) != null)
                             all.teleport(skyWars.getLocationsUtil().getIsland().get(islands));
-                        skyWars.getChestDetectionAndFill().DetectChets(all.getWorld().getName());
+                        skyWars.getChestDetectionAndFill().detectChets(all.getWorld().getName());
                         islands--;
                     }
-                    EquipTimer();
+                    setPlayerKits();
+                    equipTimer();
                     cancel();
                 }
                 for (Player all : Bukkit.getOnlinePlayers()) {
-                    all.setLevel(lobbycounter);
+                    all.setLevel(lobbyCounter);
                 }
-                lobbycounter--;
+                lobbyCounter--;
             }
         }.runTaskTimer(skyWars, 0L, 20L));
     }
 
-    private void EquipTimer() {
+    private void equipTimer() {
+        timer = 20;
         skyWars.getSchedulerSaver().createScheduler(new BukkitRunnable() {
-            int timer = 20;
-
             public void run() {
                 if (timer == 0) {
-                    skyWars.getGameState().setGameState(GameEnum.INGAME);
+                    skyWars.getGame().setGameState(GameEnum.INGAME);
                     cancel();
-                }
-                for (Player all : Bukkit.getOnlinePlayers()) {
-                    all.setLevel(timer);
                 }
                 timer--;
             }
         }.runTaskTimer(skyWars, 0L, 20L));
     }
 
-    public int getLobbycounter() {
-        return lobbycounter;
+    public int getLobbyCounter() {
+        return lobbyCounter;
     }
 
-    public void setLobbycounter(int lobbycounter) {
-        this.lobbycounter = lobbycounter;
+    public void setLobbyCounter(int lobbyCounter) {
+        this.lobbyCounter = lobbyCounter;
+    }
+
+    private void setPlayerKits() {
+        for (Player all : Bukkit.getOnlinePlayers()) {
+            all.getInventory().clear();
+            if (skyWars.getData().isMySQLActive())
+                skyWars.getSqlSkyWars().getPlayerKit(all);
+            if (skyWars.getKitMenue().getPlayerKit().get(all) == null)
+                skyWars.getKitMenue().setPlayerKit(all, getFirstKey(skyWars.getConfigUtil().getKits()));
+            for (String material : skyWars.getConfigUtil().getKits().get(skyWars.getKitMenue().getPlayerKit().get(all))) {
+                all.getInventory().addItem(new ItemStack(Material.getMaterial(material)));
+            }
+        }
     }
 }
 

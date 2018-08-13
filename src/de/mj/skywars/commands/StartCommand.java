@@ -21,8 +21,8 @@ public class StartCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (skyWars.getStartScheduler().getLobbycounter() > 10) {
-            skyWars.getStartScheduler().setLobbycounter(10);
+        if (skyWars.getStartScheduler().getLobbyCounter() > 10) {
+            skyWars.getStartScheduler().setLobbyCounter(10);
             return true;
         }
         return false;

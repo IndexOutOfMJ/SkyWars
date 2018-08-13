@@ -7,8 +7,8 @@
 package de.mj.skywars.listener;
 
 import de.mj.skywars.SkyWars;
+import de.mj.skywars.utils.Game;
 import de.mj.skywars.utils.GameEnum;
-import de.mj.skywars.utils.GameState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,8 +27,10 @@ public class PlayerDeathListener implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent deathEvent) {
         Player player = deathEvent.getEntity();
-        GameState gameState = skyWars.getGameState();
-        if (gameState.getGameState().equals(GameEnum.LOBBY))
-            player.teleport(skyWars.getLocationsUtil().getLobby());
+        Game game = skyWars.getGame();
+        if (game.getGameState().equals(GameEnum.LOBBY)) {
+            player.teleport(skyWars.getLocationsUtil().getLocation("lobby"));
+            return;
+        }
     }
 }

@@ -34,10 +34,39 @@ public class SetLocationCommand implements CommandExecutor {
                     }
                     return true;
                 }
-                return false;
+                if (args[0].equalsIgnoreCase("center")) {
+                    if (skyWars.getLocationsUtil().setLocation(player.getLocation(), "center")) {
+                        player.sendMessage(skyWars.getData().getPrefix() + "Location wurde erfolgreich gesetzt!");
+                    } else {
+                        player.sendMessage(skyWars.getData().getPrefix() + "Es ist ein Fehler aufgetreten!");
+                    }
+                    return true;
+                }
+                if (isInteger(args[0])) {
+                    int island = Integer.valueOf(args[0]);
+                    if (skyWars.getLocationsUtil().setLocation(player.getLocation(), island)) {
+                        player.sendMessage(skyWars.getData().getPrefix() + "Location wurde erfolgreich gesetzt!");
+                    } else {
+                        player.sendMessage(skyWars.getData().getPrefix() + "Es ist ein Fehler aufgetreten!");
+                    }
+                    return true;
+                }
             }
-            return false;
         }
         return false;
+    }
+
+    public boolean isInteger(Object object) {
+        if (object instanceof Integer) {
+            return true;
+        } else {
+            String string = object.toString();
+            try {
+                Integer.parseInt(string);
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
     }
 }

@@ -7,13 +7,15 @@
 package de.mj.skywars.listener;
 
 import de.mj.skywars.SkyWars;
+import de.mj.skywars.utils.Game;
 import de.mj.skywars.utils.GameEnum;
-import de.mj.skywars.utils.GameState;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class JoinListener implements Listener {
@@ -26,15 +28,45 @@ public class JoinListener implements Listener {
     }
 
     @EventHandler
+    /*
+    TODO
+    LanguageFile
+    JoinMessage
+     */
     public void onJoin (PlayerJoinEvent joinEvent) {
         Player player = joinEvent.getPlayer();
-        GameState gameState = skyWars.getGameState();
-        System.out.println(gameState.getGameState());
-        if (Bukkit.getOnlinePlayers().size() == skyWars.getConfigUtil().getDefaultConfig().getInt("PlayerCountToStart"))
-            skyWars.getGameState().GameStart();
-        if (skyWars.getLocationsUtil().getLobby() == null) {
+        Game game = skyWars.getGame();
+        System.out.println(game.getGameState());
+        player.setHealth(20);
+        player.setFoodLevel(20);
+        player.setGameMode(GameMode.SURVIVAL);
+        if (Bukkit.getOnlinePlayers().size() == skyWars.getData().getPlayerCount())
+            skyWars.getGame().gameStart();
+        if (game.getGameState().equals(GameEnum.LOBBY) && skyWars.getLocationsUtil().getLocation("lobby") != null)
+            player.teleport(skyWars.getLocationsUtil().getLocation("lobby"));
+        if (game.getGameState().equals(GameEnum.EQUIP) || game.getGameState().equals(GameEnum.INGAME)) {
+            player.teleport(skyWars.getLocationsUtil().getLocation("center"));
+            player.setGameMode(GameMode.SPECTATOR);
+        }
+        if (game.getGameState().equals(GameEnum.END) || game.getGameState().equals(GameEnum.RESTART))
+            player.kickPlayer(" ");
+        if (skyWars.getData().isMySQLActive())
+            skyWars.getSqlSkyWars().createPlayer(player);
+        else {
+            if (skyWars.getConfigUtil().getPlayerConfig().get(player.getName() + "Kills") == null) {
+                skyWars.getConfigUtil().getPlayerConfig().set(player.getName() + ".Kills", 0);
+                skyWars.getConfigUtil().getPlayerConfig().set(player.getName() + ".Deaths", 0);
+            }
+        }
+        setItems(player);
+    }
 
-        } else if (gameState.getGameState().equals(GameEnum.LOBBY))
-            player.teleport(skyWars.getLocationsUtil().getLobby());
+    private void setItems(Player player) {
+        Inventory inventory = player.getInventory();
+        inventory.clear();
+        if (player.hasPermission("skywars.start"))
+            inventory.setItem(1, skyWars.getItemCreator().createItem(skyWars.getData().getStartItemName(), skyWars.getData().getStartItemType(), skyWars.getData().getStartItemLore()));
+        inventory.setItem(2, skyWars.getItemCreator().createItem(skyWars.getData().getKitItemName(), skyWars.getData().getKitItemType(), skyWars.getData().getKitItemLore()));
+        inventory.setItem(8, skyWars.getItemCreator().createItem(skyWars.getData().getExitItemName(), skyWars.getData().getExitItemType(), skyWars.getData().getExitItemLore()));
     }
 }
