@@ -1,0 +1,33 @@
+name: SkyWars
+author: MJ
+version: ${project.version}
+main: main.mj.skywars.SkyWars
+website: https://github.com/MJGamingHDTV/SkyWars/
+description: SkyWars is known by everyone!
+database: false
+
+commands:
+  setlocation:
+    description: Set a location
+    usage: Wrong usage! /<command> <lobby, spawn1, spawn2, ...>
+    permission: skywars.setup
+    aliases: [setloc, set]
+  start:
+    description: Starts the game
+    usage: /<command>
+    permission: skywars.start
+  skywars:
+    description: Some admin commands
+    usage: /<command> <setlobby, reload>
+    permission: skywars.*
+
+permissions:
+  skywas.*:
+    description: Gives access for all SkyWars commands
+    children:
+      skywars.setup: true
+  skywars.setup:
+    description: Gives you the permission to setup the plugin
+  skywars.start:
+    description: Give you the permission to start the game
+
